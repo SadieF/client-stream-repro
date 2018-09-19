@@ -1,0 +1,28 @@
+{
+  "name": "client-stream-repro",
+  "version": "1.0.0",
+  "description": "Repro for issue #105 improbable-eng/ts-protoc-gen",
+  "main": "client.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SadieF/client-stream-repro.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SadieF/client-stream-repro/issues"
+  },
+  "homepage": "https://github.com/SadieF/client-stream-repro#readme",
+  "dependencies": {
+    "app": "^0.1.0",
+    "create-react": "0.0.0",
+    "go-example-app": "git+ssh://git@github.com/Z2hMedia/go-example-app.git",
+    "google-protobuf": "^3.6.1",
+    "grpc-web-client": "^0.6.3",
+    "ts-protoc-gen": "^0.7.7-pre.5959599"
+  }
+}
