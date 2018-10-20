@@ -1,5 +1,8 @@
 OUT=src/grpc
 
+BUFDIR:=node_modules/go-example-app/api
+BUFS:=$(shell find $(BUFDIR) -name '*.proto' )
+
 protobuf:
 	protoc \
 	--plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts \
@@ -10,10 +13,10 @@ protobuf:
 	-I $(GOPATH)/src/github.com/golang/protobuf \
 	-I $(GOPATH)/src/ \
 	-I node_modules/go-example-app/api \
-	node_modules/go-example-app/api/example.proto
+	$(BUFS)
 	sed -i '1i/* eslint-disable */' src/grpc/example_pb.js 
 	sed -i '1i/* eslint-disable */' src/grpc/example_pb.d.ts 
-	sed -i '/google_api_annotations_pb/d' src/grpc/example_pb.js 
-	sed -i '/google_api_annotations_pb/d' src/grpc/example_pb.d.ts  
+	sed -i '/google_api_annotations_pb/d' src/grpc/service_pb.js 
+	sed -i '/google_api_annotations_pb/d' src/grpc/service_pb.d.ts  
 	sed -i '/github_com_mwitkow_go/d' src/grpc/example_pb.js 
 	sed -i '/github_com_mwitkow_go/d' src/grpc/example_pb.d.ts 

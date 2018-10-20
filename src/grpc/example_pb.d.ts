@@ -1,5 +1,5 @@
 /* eslint-disable */
-// package: api
+// package: example
 // file: example.proto
 
 import * as jspb from "google-protobuf";
