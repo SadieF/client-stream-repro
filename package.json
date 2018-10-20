@@ -6,7 +6,6 @@
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-scripts": "1.1.5",
-    "go-example-app": "git+ssh://git@github.com/Z2hMedia/go-example-app.git",
     "google-protobuf": "^3.6.1",
     "grpc-web-client": "^0.6.3",
     "ts-protoc-gen": "^0.7.7-pre.5959599"

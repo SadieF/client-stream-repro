@@ -1,0 +1,31 @@
+syntax = "proto3";
+package example;
+
+import "github.com/mwitkow/go-proto-validators/validator.proto";
+import "google/api/annotations.proto";
+
+
+message PingMessage {
+  string greeting = 1 [(validator.field) = {msg_exists : true}];
+}
+
+message PongMessage {
+  string response = 1 [(validator.field) = {msg_exists : true}];
+}
+
+message PingCountMessage {
+  int64 count = 1 [(validator.field) = {int_gt: 0, int_lt: 100}];
+  string message = 2 [(validator.field) = {msg_exists : true}];
+}
+
+message StreamPingMessage {
+  int64 count = 1 [(validator.field) = {int_gt: 0, int_lt: 100}];
+  string msg  = 2 [(validator.field) = {msg_exists : true}];
+}
+
+service Ping {
+  rpc PingMe(PingMessage) returns (PongMessage) {}
+  rpc StreamIn(stream PingMessage) returns (PingCountMessage) {}
+  rpc StreamBack(PingCountMessage) returns (stream PingMessage) {}
+  rpc StreamPing(stream PingMessage) returns (stream PongMessage) {}
+}

@@ -1,7 +1,8 @@
 OUT=src/grpc
 
-BUFDIR:=node_modules/go-example-app/api
-BUFS:=$(shell find $(BUFDIR) -name '*.proto' )
+# BUFDIR:=node_modules/go-example-app/api
+# BUFS:=$(shell find $(BUFDIR) -name '*.proto' )
+BUFS:=./example.proto
 
 protobuf:
 	protoc \
@@ -12,11 +13,11 @@ protobuf:
 	-I $(GOPATH)/src/github.com/grpc-ecosystem/grpc-gateway \
 	-I $(GOPATH)/src/github.com/golang/protobuf \
 	-I $(GOPATH)/src/ \
-	-I node_modules/go-example-app/api \
+	-I . \
 	$(BUFS)
-	sed -i '1i/* eslint-disable */' src/grpc/example_pb.js 
-	sed -i '1i/* eslint-disable */' src/grpc/example_pb.d.ts 
-	sed -i '/google_api_annotations_pb/d' src/grpc/service_pb.js 
-	sed -i '/google_api_annotations_pb/d' src/grpc/service_pb.d.ts  
-	sed -i '/github_com_mwitkow_go/d' src/grpc/example_pb.js 
-	sed -i '/github_com_mwitkow_go/d' src/grpc/example_pb.d.ts 
+	sed -i '1i/* eslint-disable */' src/grpc/example_pb.js
+	sed -i '1i/* eslint-disable */' src/grpc/example_pb.d.ts
+	sed -i '/google_api_annotations_pb/d' src/grpc/example_pb.js
+	sed -i '/google_api_annotations_pb/d' src/grpc/example_pb.d.ts
+	sed -i '/github_com_mwitkow_go/d' src/grpc/example_pb.js
+	sed -i '/github_com_mwitkow_go/d' src/grpc/example_pb.d.ts

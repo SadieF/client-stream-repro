@@ -1,47 +1,75 @@
-import { PingClient } from "./grpc/service_pb_service";
-import { PingMessage } from "./grpc/example_pb";
-// import { grpc } from "grpc-web-client";
+import { PingClient } from "./grpc/example_pb_service";
+import { PingCountMessage, PingMessage } from "./grpc/example_pb";
 
-// Unary Request - This Works
+const url = "http://localhost:90";
+const c = new PingClient(url);
+
+// // Unary Request -- works fine
+// // rpc PingMe(PingMessage) returns (PongMessage) {}
 const query = new PingMessage();
 query.setGreeting("Meow");
-
-const c = new PingClient("http://192.168.0.13:199");
 c.pingMe(query, null, (err, response) => {
-  console.log("Error: ", err);
-  console.log("Hello client ", response);
+  if (err) {
+    console.log("pingMe request error: ", err);
+  } else {
+    console.log("pingMe request response: ", response.toObject());
+  }
 });
 
-// Server Streaming = This works
-// const queryBack = new PingCountMessage();
-// queryBack.setCount(10);
-// queryBack.setMessage("cat");
+// //Server streaming -- this works fine
+// // rpc StreamBack(PingCountMessage) returns (stream PingMessage) {}
+const queryBack = new PingCountMessage();
+queryBack.setCount(2);
+queryBack.setMessage("cat");
 
-// const b = new PingClient("https://example.bibabots.com:4443");
-// var stream = b.streamBack(queryBack, null, (err, response) => {});
-// stream.on("data", function(response) {
-//   console.log("Streaming works: ", response.toObject());
-// });
-// stream.on("end", (resp, err) => {
-//   console.log("status", resp, err);
-// });
+var streamBack = c.streamBack(queryBack, null);
+streamBack.on("data", function(response) {
+  console.log("stream back response data: ", response.toObject());
+});
+streamBack.on("end", () => {
+  console.log("stream back end");
+});
 
-//Client Streaming
-// const queryIn = new PingMessage();
-// queryIn.setGreeting("meerkat");
+// bidirectional streaming
+// rpc StreamPing(stream PingMessage) returns (stream PongMessage) {}
+var bidiStream = c.streamPing();
+bidiStream.on("data", resp => {
+  console.log("bidi stream mesg: ", resp.toObject());
+});
+bidiStream.on("status", resp => {
+  console.log("bidi stream status: ", resp);
+});
+bidiStream.on("end", () => {
+  console.log("bidi stream over");
+});
 
-// const n = new PingClient("https://example.bibabots.com:4443");
-// var stream = n.streamIn(queryIn, null, (err, response) => {});
-// stream.on("data", function(response) {
-//   console.log("Streaming works: ", response.toObject());
-// });
-// stream.on("end", (resp, err) => {
-//   console.log("status", resp, err);
-// });
+query.setGreeting("Meow 1 ");
+bidiStream.write(query);
+query.setGreeting("Meow 2");
+bidiStream.write(query);
+query.setGreeting("Meow 3");
+bidiStream.write(query);
+bidiStream.end();
 
-const test = () => {
-  var msg = {};
+// // Client Streaming
+// // rpc StreamIn(stream PingMessage) returns (PingCountMessage) {}
+var stream2 = c.streamIn();
+stream2.on("status", (a, b, c) => {
+  console.log("stream in status: ", a, b, c);
+});
+stream2.on("end", () => {
+  console.log("stream in end");
+});
 
-  return msg;
-};
-export default test;
+query.setGreeting("Bark 1");
+stream2.write(query);
+query.setGreeting("Bark 2");
+stream2.write(query);
+query.setGreeting("Bark 3");
+stream2.write(query);
+query.setGreeting("Bark 4");
+stream2.write(query);
+stream2.end();
+// how to get returned PingCountMessage that server returns?
+
+export default "various GRPC calls";
